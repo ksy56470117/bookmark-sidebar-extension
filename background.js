@@ -1,7 +1,4 @@
-// Open the side panel when the toolbar icon is clicked
+// Send toggle message to active tab when toolbar icon is clicked
 chrome.action.onClicked.addListener(tab => {
-  chrome.sidePanel.open({ windowId: tab.windowId });
+  chrome.tabs.sendMessage(tab.id, { action: 'toggle' });
 });
-
-// Enable side panel on all pages by default
-chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: true });

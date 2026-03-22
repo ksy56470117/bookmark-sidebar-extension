@@ -1,21 +1,31 @@
 {
   "manifest_version": 3,
   "name": "북마크 사이드바",
-  "version": "1.0",
-  "description": "북마크를 사이드바에서 보여주며 배경 투명도를 조절할 수 있습니다.",
+  "version": "2.0",
+  "description": "웹페이지 위에 떠있는 북마크 사이드바. 배경 투명도/블러 조절 가능.",
   "permissions": [
     "bookmarks",
-    "storage",
-    "sidePanel"
+    "storage"
   ],
   "background": {
     "service_worker": "background.js"
   },
-  "side_panel": {
-    "default_path": "sidepanel.html"
-  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["sidebar.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
   "action": {
-    "default_title": "북마크 사이드바 열기",
+    "default_title": "북마크 사이드바 토글",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
