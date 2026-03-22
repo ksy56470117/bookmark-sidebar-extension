@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>북마크</title>
+  <link rel="stylesheet" href="sidepanel.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- Header -->
+    <header>
+      <h1>북마크</h1>
+      <div class="header-controls">
+
+        <!-- Search -->
+        <button class="icon-btn" id="btn-search-toggle" title="검색">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+        </button>
+
+        <!-- Collapse all -->
+        <button class="icon-btn" id="btn-collapse-all" title="모두 접기">
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 3 18 9"/><polyline points="6 15 12 21 18 15"/></svg>
+        </button>
+
+        <!-- Settings -->
+        <button class="icon-btn" id="btn-settings-toggle" title="설정">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+        </button>
+
+      </div>
+    </header>
+
+    <!-- Search Bar -->
+    <div id="search-bar" class="hidden">
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search-input" placeholder="북마크 검색" autocomplete="off" spellcheck="false" />
+      </div>
+    </div>
+
+    <!-- Settings Panel -->
+    <div id="settings-panel" class="hidden">
+
+      <div class="settings-section">
+        <!-- Opacity -->
+        <div class="setting-row">
+          <span class="setting-label">투명도</span>
+          <div class="slider-group">
+            <input type="range" id="opacity-slider" min="10" max="100" value="82" step="1" />
+            <span class="slider-val" id="opacity-value">82%</span>
+          </div>
+        </div>
+        <!-- Blur -->
+        <div class="setting-row">
+          <span class="setting-label">블러</span>
+          <div class="slider-group">
+            <input type="range" id="blur-slider" min="0" max="40" value="20" step="1" />
+            <span class="slider-val" id="blur-value">20px</span>
+          </div>
+        </div>
+        <!-- Theme -->
+        <div class="color-picker-row">
+          <span class="setting-label">테마</span>
+          <div class="color-chips">
+            <button class="chip active" data-color="light"  style="background: linear-gradient(135deg,#fff,#e8e8ed);" title="라이트"></button>
+            <button class="chip"        data-color="dark"   style="background: linear-gradient(135deg,#1c1c1e,#2c2c2e);" title="다크"></button>
+            <button class="chip"        data-color="blue"   style="background: linear-gradient(135deg,#e8f0fe,#c5d8ff);" title="블루"></button>
+            <button class="chip"        data-color="green"  style="background: linear-gradient(135deg,#e8fdf0,#c2f0d6);" title="그린"></button>
+            <button class="chip"        data-color="sand"   style="background: linear-gradient(135deg,#fdf8ee,#f0e6c8);" title="샌드"></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Bookmark Tree -->
+    <div id="bookmark-tree">
+      <p class="state-msg">불러오는 중...</p>
+    </div>
+
+  </div>
+  <script src="sidepanel.js"></script>
+</body>
+</html>
