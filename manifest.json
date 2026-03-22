@@ -5,7 +5,9 @@
   "description": "웹페이지 위에 떠있는 북마크 사이드바. 배경 투명도/블러 조절 가능.",
   "permissions": [
     "bookmarks",
-    "storage"
+    "storage",
+    "scripting",
+    "activeTab"
   ],
   "background": {
     "service_worker": "background.js"

@@ -1,11 +1,3 @@
-// ── Prevent double injection ──────────────────────────────────
-if (document.getElementById('bm-sidebar-root')) {
-  // Already injected — just toggle
-  chrome.runtime.onMessage.addListener(handleMessage);
-} else {
-  injectSidebar();
-}
-
 // ── State ────────────────────────────────────────────────────
 const STORAGE_KEY = 'bm_sidebar_v2';
 let state = { opacity: 88, blur: 16, theme: 'light', openFolders: {}, width: 260 };
@@ -349,4 +341,12 @@ function bindEvents() {
   ['onCreated','onRemoved','onChanged','onMoved'].forEach(ev => {
     chrome.bookmarks[ev].addListener(loadBookmarks);
   });
+}
+
+// ── Entry point (all declarations initialized above) ─────────
+if (document.getElementById('bm-sidebar-root')) {
+  // Already injected — just toggle
+  toggleSidebar();
+} else {
+  injectSidebar();
 }
