@@ -1,6 +1,6 @@
 // ── State ────────────────────────────────────────────────────
 const STORAGE_KEY = 'bm_sidebar_v2';
-let state = { opacity: 88, blur: 16, theme: 'light', openFolders: {}, width: 260 };
+let state = { opacity: 0, blur: 16, theme: 'light', openFolders: {}, width: 220 };
 let allBookmarks = [];
 let isOpen = false;
 
@@ -18,9 +18,6 @@ function injectSidebar() {
   root.id = 'bm-sidebar-root';
   root.innerHTML = `
     <div id="bm-sidebar" class="bm-closed">
-
-      <!-- Toggle tab -->
-      <div id="bm-tab" title="북마크 사이드바">⭐</div>
 
       <!-- Panel -->
       <div id="bm-panel">
@@ -54,8 +51,8 @@ function injectSidebar() {
             <div class="bm-setting-row">
               <span class="bm-setting-label">투명도</span>
               <div class="bm-slider-group">
-                <input type="range" id="bm-opacity-slider" min="20" max="100" value="88" step="1"/>
-                <span id="bm-opacity-val">88%</span>
+                <input type="range" id="bm-opacity-slider" min="-40" max="40" value="0" step="1"/>
+                <span id="bm-opacity-val">0</span>
               </div>
             </div>
             <div class="bm-setting-row">
@@ -68,8 +65,8 @@ function injectSidebar() {
             <div class="bm-setting-row">
               <span class="bm-setting-label">너비</span>
               <div class="bm-slider-group">
-                <input type="range" id="bm-width-slider" min="200" max="400" value="260" step="10"/>
-                <span id="bm-width-val">260px</span>
+                <input type="range" id="bm-width-slider" min="160" max="340" value="220" step="10"/>
+                <span id="bm-width-val">220px</span>
               </div>
             </div>
             <div class="bm-setting-row bm-color-row">
@@ -132,13 +129,13 @@ function applySettings() {
   const sidebar = document.getElementById('bm-sidebar');
   const panel = document.getElementById('bm-panel');
 
-  sidebar.style.setProperty('--bm-bg', `rgba(${t.bg},${state.opacity / 100})`);
+  sidebar.style.setProperty('--bm-bg', `rgba(${t.bg},${(70 + state.opacity) / 100})`);
   sidebar.style.setProperty('--bm-blur', `${state.blur}px`);
   sidebar.classList.toggle('bm-dark', t.dark);
   panel.style.width = `${state.width}px`;
 
   document.getElementById('bm-opacity-slider').value = state.opacity;
-  document.getElementById('bm-opacity-val').textContent = `${state.opacity}%`;
+  document.getElementById('bm-opacity-val').textContent = state.opacity > 0 ? `+${state.opacity}` : `${state.opacity}`;
   document.getElementById('bm-blur-slider').value = state.blur;
   document.getElementById('bm-blur-val').textContent = `${state.blur}px`;
   document.getElementById('bm-width-slider').value = state.width;
@@ -151,9 +148,10 @@ function applySettings() {
 
 // ── Bookmarks ─────────────────────────────────────────────────
 function loadBookmarks() {
-  chrome.bookmarks.getTree(nodes => {
-    allBookmarks = nodes;
-    renderTree(nodes);
+  chrome.runtime.sendMessage({ action: 'getBookmarks' }, response => {
+    if (chrome.runtime.lastError || !response) return;
+    allBookmarks = response.nodes;
+    renderTree(response.nodes);
   });
 }
 
@@ -281,7 +279,6 @@ function renderSearch(q) {
 
 // ── Events ────────────────────────────────────────────────────
 function bindEvents() {
-  document.getElementById('bm-tab').addEventListener('click', toggleSidebar);
   document.getElementById('bm-close-btn').addEventListener('click', toggleSidebar);
 
   document.getElementById('bm-search-btn').addEventListener('click', () => {
@@ -310,9 +307,9 @@ function bindEvents() {
 
   document.getElementById('bm-opacity-slider').addEventListener('input', e => {
     state.opacity = +e.target.value;
-    document.getElementById('bm-opacity-val').textContent = `${state.opacity}%`;
+    document.getElementById('bm-opacity-val').textContent = state.opacity > 0 ? `+${state.opacity}` : `${state.opacity}`;
     document.getElementById('bm-sidebar').style.setProperty('--bm-bg',
-      `rgba(${THEMES[state.theme].bg},${state.opacity / 100})`);
+      `rgba(${THEMES[state.theme].bg},${(70 + state.opacity) / 100})`);
     saveSettings();
   });
 
@@ -338,8 +335,9 @@ function bindEvents() {
     });
   });
 
-  ['onCreated','onRemoved','onChanged','onMoved'].forEach(ev => {
-    chrome.bookmarks[ev].addListener(loadBookmarks);
+  // Listen for bookmark change notifications from background
+  chrome.runtime.onMessage.addListener(msg => {
+    if (msg.action === 'reloadBookmarks') loadBookmarks();
   });
 }
 

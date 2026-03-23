@@ -13,3 +13,23 @@ chrome.action.onClicked.addListener(async tab => {
     await chrome.tabs.sendMessage(tab.id, { action: 'toggle' });
   }
 });
+
+// Handle bookmark requests from content scripts
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.action === 'getBookmarks') {
+    chrome.bookmarks.getTree(nodes => sendResponse({ nodes }));
+    return true; // keep channel open for async response
+  }
+});
+
+// Broadcast bookmark changes to all tabs
+function broadcastBookmarkChange() {
+  chrome.tabs.query({}, tabs => {
+    tabs.forEach(tab => {
+      chrome.tabs.sendMessage(tab.id, { action: 'reloadBookmarks' }).catch(() => {});
+    });
+  });
+}
+['onCreated','onRemoved','onChanged','onMoved'].forEach(ev => {
+  chrome.bookmarks[ev].addListener(broadcastBookmarkChange);
+});

@@ -23,8 +23,6 @@
   --bm-fill: rgba(120,120,128,0.12);
   --bm-fill2: rgba(120,120,128,0.18);
   --bm-radius: 14px;
-  --bm-tab-w: 28px;
-
   display: flex;
   flex-direction: row;
   align-items: stretch;
@@ -34,9 +32,9 @@
   transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
 }
 
-/* Closed: shift panel off-screen, only tab visible */
+/* Closed: completely off-screen */
 #bm-sidebar.bm-closed {
-  transform: translateX(calc(100% - var(--bm-tab-w)));
+  transform: translateX(100%);
 }
 #bm-sidebar.bm-open {
   transform: translateX(0);
@@ -53,34 +51,9 @@
   --bm-fill2: rgba(120,120,128,0.36);
 }
 
-/* ── Toggle Tab ─────────────────────────────────────────────── */
-#bm-tab {
-  width: var(--bm-tab-w);
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  writing-mode: vertical-rl;
-  cursor: pointer;
-  pointer-events: auto;
-  background: var(--bm-bg);
-  backdrop-filter: blur(var(--bm-blur)) saturate(180%);
-  -webkit-backdrop-filter: blur(var(--bm-blur)) saturate(180%);
-  border-radius: var(--bm-radius) 0 0 var(--bm-radius);
-  box-shadow: -2px 0 16px rgba(0,0,0,0.12);
-  font-size: 14px;
-  color: var(--bm-accent);
-  user-select: none;
-  transition: background 0.15s;
-  border-right: 0.5px solid var(--bm-sep);
-}
-#bm-tab:hover {
-  background: rgba(0,122,255,0.08);
-}
-
 /* ── Panel ──────────────────────────────────────────────────── */
 #bm-panel {
-  width: 260px;
+  width: 220px;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -166,69 +139,93 @@
 
 /* ── Settings ───────────────────────────────────────────────── */
 #bm-settings-panel {
-  padding: 10px;
+  padding: 8px 10px 10px;
   border-bottom: 0.5px solid var(--bm-sep);
   flex-shrink: 0;
 }
 
 .bm-settings-box {
   background: var(--bm-fill);
-  border-radius: 11px;
+  border-radius: 12px;
   overflow: hidden;
 }
 
 .bm-setting-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 11px;
+  gap: 10px;
+  padding: 0 12px;
+  min-height: 42px;
   border-bottom: 0.5px solid var(--bm-sep);
 }
 .bm-setting-row:last-child { border-bottom: none; }
 
 .bm-setting-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--bm-label2);
-  min-width: 32px;
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--bm-label);
+  min-width: 34px;
+  flex-shrink: 0;
   -webkit-font-smoothing: antialiased;
 }
 
 .bm-slider-group {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   flex: 1;
-}
-.bm-slider-group input[type="range"] {
-  flex: 1;
-  accent-color: var(--bm-accent);
-  cursor: pointer;
-  height: 18px;
-}
-.bm-slider-group span {
-  font-size: 11px;
-  color: var(--bm-label2);
-  min-width: 34px;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
 }
 
-.bm-color-row { align-items: center; }
-.bm-chips { display: flex; gap: 6px; margin-left: auto; }
+.bm-slider-group input[type="range"] {
+  -webkit-appearance: none;
+  flex: 1;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--bm-label3);
+  outline: none;
+  cursor: pointer;
+}
+.bm-slider-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.28), 0 0 0 0.5px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.bm-slider-group input[type="range"]:active::-webkit-slider-thumb {
+  transform: scale(1.12);
+}
+
+.bm-slider-group span {
+  font-size: 13px;
+  color: var(--bm-label2);
+  min-width: 28px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+.bm-color-row { min-height: 46px; }
+.bm-chips { display: flex; gap: 7px; margin-left: auto; }
 .bm-chip {
   all: unset;
-  width: 20px; height: 20px;
+  width: 24px; height: 24px;
   border-radius: 50%;
   border: 2px solid transparent;
   cursor: pointer;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-  transition: transform 0.15s, border-color 0.15s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-sizing: border-box;
 }
-.bm-chip:hover { transform: scale(1.15); }
-.bm-chip.active { border-color: var(--bm-accent); transform: scale(1.12); }
+.bm-chip:hover { transform: scale(1.1); }
+.bm-chip.active {
+  border-color: var(--bm-accent);
+  box-shadow: 0 0 0 2px rgba(0,122,255,0.25);
+  transform: scale(1.08);
+}
 
 /* ── Tree ───────────────────────────────────────────────────── */
 #bm-tree {
