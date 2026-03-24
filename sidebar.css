@@ -1,8 +1,6 @@
 /* ── Floating Bookmark Sidebar ───────────────────────────────
    Scoped with #bm-sidebar-root to avoid bleeding into host page */
 
-@import url('https://fonts.googleapis.com/css2?family=Gothic+A1:wght@400;500;600;700&display=swap');
-
 #bm-sidebar-root {
   all: initial;
   position: fixed;
@@ -11,7 +9,7 @@
   height: 100vh;
   z-index: 2147483647;
   pointer-events: none;
-  font-family: 'Gothic A1', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', sans-serif;
 }
 
 #bm-sidebar {
