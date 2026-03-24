@@ -10,7 +10,8 @@ chrome.action.onClicked.addListener(async tab => {
     // Content script not yet injected — inject then toggle
     await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['content.js'] });
     await chrome.scripting.insertCSS({ target: { tabId: tab.id }, files: ['sidebar.css'] });
-    await chrome.tabs.sendMessage(tab.id, { action: 'toggle' });
+    await new Promise(r => setTimeout(r, 80));
+    await chrome.tabs.sendMessage(tab.id, { action: 'toggle' }).catch(() => {});
   }
 });
 
