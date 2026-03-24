@@ -42,10 +42,10 @@ function injectSidebar() {
           </div>
         </header>
 
-        <div id="bm-search-bar" class="bm-hidden">
+        <div id="bm-search-bar">
           <div class="bm-search-wrap">
-            <span class="bm-search-icon">🔍</span>
-            <input id="bm-search-input" type="text" placeholder="북마크 검색" autocomplete="off" spellcheck="false"/>
+            <svg class="bm-search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+            <input id="bm-search-input" type="text" placeholder="검색" autocomplete="off" spellcheck="false"/>
           </div>
         </div>
 
@@ -97,8 +97,10 @@ function injectSidebar() {
     if (state.pinned) {
       isOpen = true;
       const sidebar = document.getElementById('bm-sidebar');
+      sidebar.classList.add('bm-no-transition');
       sidebar.classList.remove('bm-closed');
       sidebar.classList.add('bm-open');
+      requestAnimationFrame(() => sidebar.classList.remove('bm-no-transition'));
     }
     loadBookmarks();
     bindEvents();
@@ -201,44 +203,48 @@ function buildFolder(node, level) {
   const header = document.createElement('div');
   header.className = 'bm-folder-header';
 
-  const chevron = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  chevron.setAttribute('viewBox', '0 0 24 24');
-  chevron.setAttribute('class', 'bm-chevron');
-  chevron.setAttribute('fill', 'none');
-  chevron.setAttribute('stroke', 'currentColor');
-  chevron.setAttribute('stroke-width', '2.5');
-  chevron.setAttribute('stroke-linecap', 'round');
-  const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-  poly.setAttribute('points', '9 18 15 12 9 6');
-  chevron.appendChild(poly);
-
-  const icon = document.createElement('span');
-  icon.className = 'bm-folder-icon';
-  icon.textContent = '📁';
+  const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  icon.setAttribute('viewBox', '0 0 24 24');
+  icon.setAttribute('class', 'bm-folder-icon');
+  icon.setAttribute('fill', 'none');
+  icon.setAttribute('stroke', 'currentColor');
+  icon.setAttribute('stroke-width', '1.8');
+  icon.setAttribute('stroke-linecap', 'round');
+  icon.setAttribute('stroke-linejoin', 'round');
+  const folderPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  folderPath.setAttribute('d', 'M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z');
+  icon.appendChild(folderPath);
 
   const title = document.createElement('span');
   title.className = 'bm-folder-title';
   title.textContent = node.title || '(이름 없음)';
 
-  const badge = document.createElement('span');
-  badge.className = 'bm-badge';
-  badge.textContent = countItems(node.children || []);
+  const chevron = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  chevron.setAttribute('viewBox', '0 0 24 24');
+  chevron.setAttribute('class', 'bm-chevron');
+  chevron.setAttribute('fill', 'none');
+  chevron.setAttribute('stroke', 'currentColor');
+  chevron.setAttribute('stroke-width', '2');
+  chevron.setAttribute('stroke-linecap', 'round');
+  const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+  poly.setAttribute('points', '9 18 15 12 9 6');
+  chevron.appendChild(poly);
 
-  header.append(chevron, icon, title, badge);
+  header.append(icon, title, chevron);
 
   const children = document.createElement('div');
   children.className = 'bm-folder-children';
 
   const isOpen = state.openFolders[node.id] !== false;
   if (!isOpen) children.classList.add('bm-collapsed');
-  else { chevron.classList.add('bm-open'); icon.textContent = '📂'; }
+  else { chevron.classList.add('bm-open'); icon.classList.add('bm-folder-open'); }
 
   (node.children || []).forEach(c => children.appendChild(buildNode(c, level + 1)));
 
   header.addEventListener('click', () => {
     const collapsed = children.classList.toggle('bm-collapsed');
     chevron.classList.toggle('bm-open', !collapsed);
-    icon.textContent = collapsed ? '📁' : '📂';
+    icon.classList.toggle('bm-folder-open', !collapsed);
     state.openFolders[node.id] = !collapsed;
     saveSettings();
   });
@@ -311,10 +317,7 @@ function bindEvents() {
   document.getElementById('bm-close-btn').addEventListener('click', toggleSidebar);
 
   document.getElementById('bm-search-btn').addEventListener('click', () => {
-    const bar = document.getElementById('bm-search-bar');
-    bar.classList.toggle('bm-hidden');
-    if (!bar.classList.contains('bm-hidden')) document.getElementById('bm-search-input').focus();
-    else { document.getElementById('bm-search-input').value = ''; renderTree(allBookmarks); }
+    document.getElementById('bm-search-input').focus();
   });
 
   document.getElementById('bm-search-input').addEventListener('input', e => {
