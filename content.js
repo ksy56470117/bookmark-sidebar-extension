@@ -1,3 +1,8 @@
+// ── Guard: prevent re-injection errors ───────────────────────
+(function () {
+if (window.__bmSidebarInjecting) { return; }
+window.__bmSidebarInjecting = true;
+
 // ── State ────────────────────────────────────────────────────
 const STORAGE_KEY = 'bm_sidebar_v2';
 let state = { opacity: 0, blur: 16, theme: 'light', openFolders: {}, width: 220, pinned: false };
@@ -372,10 +377,11 @@ function bindEvents() {
   });
 }
 
-// ── Entry point (all declarations initialized above) ─────────
+// ── Entry point ──────────────────────────────────────────────
 if (document.getElementById('bm-sidebar-root')) {
-  // Already injected — just toggle
   toggleSidebar();
 } else {
   injectSidebar();
 }
+
+})(); // end IIFE
