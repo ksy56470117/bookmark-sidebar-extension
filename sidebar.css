@@ -103,6 +103,7 @@
 }
 .bm-btn:hover { background: rgba(0,122,255,0.1); }
 .bm-btn:active { background: rgba(0,122,255,0.18); transform: scale(0.92); }
+.bm-btn.bm-btn-active { background: rgba(0,122,255,0.15); color: var(--bm-accent); }
 .bm-btn svg {
   width: 15px; height: 15px;
   fill: none; stroke: currentColor;
