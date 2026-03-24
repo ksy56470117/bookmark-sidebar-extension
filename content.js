@@ -22,7 +22,6 @@ function injectSidebar() {
       <!-- Panel -->
       <div id="bm-panel">
         <header id="bm-header">
-          <span id="bm-title">북마크</span>
           <div id="bm-controls">
             <button class="bm-btn" id="bm-search-btn" title="검색">
               <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
